@@ -1,0 +1,260 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>List</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <style>
+
+        body {
+            background-color: aliceblue;
+        }
+
+        #Home {
+            margin-left: 8.4%;
+        }
+
+        #user:hover, #user:focus {
+            color: #FFFF;
+            text-decoration: none;
+        }
+
+        #user {
+            position: absolute;
+            font-size: large;
+            color: #9d9d9d;
+            right: 4%;
+            top: 25%;
+
+        }
+
+        .logo {
+            position: absolute;
+            right: 10%;
+            top: 5px;
+            width: 40px;
+            height: 40px;
+            border-radius: 100px;
+        }
+
+        .logo:hover {
+            width: 42px;
+            height: 42px;
+        }
+
+        .dropdown-menu {
+            margin-top: 50px;
+            left: 90%;
+            right: 0px;
+        }
+
+        .page {
+            position: fixed;
+            top:800px;
+        {#margin-top: 60%;#}
+        }
+
+        .logoMark {
+            width: 100px;
+            height: 100px;
+            margin-top: 10%;
+            border-radius: 100px;
+        }
+
+        .listCS {
+            margin-top: 1%;
+            height: 800px;
+            background-color:  paleturquoise;
+        }
+
+        .ls {
+            font-size: large;
+            margin-top: 30px;
+            margin-left: 5%;
+            text-align: center;
+        }
+
+        .listNav {
+            margin-top: 1%;
+        }
+
+        ._table{
+            text-align: center;
+        }
+
+    </style>
+
+
+</head>
+<body onload="abc();">
+
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="nav-header">
+            <img class="logo" src="{% static "/img/logo.png" %}">
+            <a href="#" id="user" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+               aria-expanded="false">{{ request.session.userName }} </a>
+            <div class="dropdown">
+                <ul class="dropdown-menu">
+                    <li><a href="{% url 'station:reset' %}">修改密码</a></li>
+                    <li><a href="{% url 'login:login' %}">切换用户</a></li>
+                    <li><a href="{% url 'login:logout' %}">退出</a></li>
+                </ul>
+            </div>
+            <a class="navbar-brand" id="Home" href="#">Home</a>
+        </div>
+
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-1 "></div>
+        <div class="col-md-2 sbe">
+
+            <img class="logoMark center-block" src="{% static "/img/logo.png" %}">
+            <ul class="nav  nav-stacked ls ">
+                <li><a href='{% url 'station:show_common' 6 %}'>博文苑6号楼</a></li>
+                <li><a href='{% url 'station:show_common' 8 %}'>博文苑8号楼</a></li>
+                <li><a href='{% url 'station:show_common' 9 %}'>博文苑9号楼</a></li>
+                <li><a href='{% url 'station:show_common' 10 %}'>博文苑10号楼</a></li>
+            </ul>
+
+        </div>
+        <div class="col-md-1 "></div>
+        <div class="col-md-7 listCS">
+
+            <ul class="nav nav-tabs listNav">
+                {% if csAddState is not None %}
+                    <li role="presentation" {% if csAddState.state is 1 %} class="active" {% endif %}><a href="{% url 'station:show_common' csAddState.cs_add %}">所有充电桩</a></li>
+                    <li role="presentation" {% if csAddState.state is 2 %} class="active" {% endif %}><a href="{% url 'station:show_free' csAddState.cs_add %}">空闲中</a></li>
+                    <li role="presentation" {% if csAddState.state is 3 %} class="active" {% endif %}><a href="{% url 'station:show_focus' csAddState.cs_add %}">已关注</a></li>
+                {% endif %}
+            </ul>
+
+            <div class="panel panel-default ">
+                <table class="table ">
+                    <tr align = "center">
+                        <th>充电桩编号</th>
+                        <th>充电桩位置</th>
+                        <th>空闲状态</th>
+                        <th>距离空闲时间</th>
+                        <th>是否关注</th>
+                    </tr>
+                    {% for cs in css %}
+                        <tr>
+                            {% if  csAddState.state is 3 %}
+                                <td class="_table">{{ cs.0 }}</td>
+                                <td >{{ cs.1 }}</td>
+                                {% if cs.2 is True %}
+                                    <td >快来充电呀</td>
+                                    <td >0</td>
+                                {% else %}
+                                    <td >正在忙</td>
+                                    <td class="time"></td>
+                                {% endif %}
+                                <td>
+
+                                     <form action="{% url 'station:change_state' %}" method="post">
+                                    <input type="text" value="{{ csAddState.cs_add }}" style="display: none" name ="cs_add">
+                                        {% csrf_token %}
+                                      <input type="text" value="{{ csAddState.cs_add }}" style="display: none" name ="cs_add">
+
+
+                                        {% if cs.6 ==  request.session.userTel  %}
+                                            {{ userTel }}
+                                            <input type="text" value="{{ cs.0 }}" style="display: none"  name ="num">
+                                            <button type="submit" name="del">取消关注{{ cs.0 }}号充电桩</button>
+                                        {% endif %}
+                                    </form>
+                                </td>
+                            {% else %}
+                                <td class="_table" >{{ cs.0 }}</td>
+                                <td >{{ cs.1 }}</td>
+                                {% if cs.2 is True %}
+                                    <td >快来充电呀</td>
+                                    <td >0</td>
+                                {% else %}
+                                    <td >正在忙</td>
+                                    <td class="time"></td>
+                                {% endif %}
+                                <td>
+                                   <form action="{% url 'station:change_state' %}" method="post">
+                                        {% csrf_token %}
+                                        <input type="text" value="{{ csAddState.cs_add }}" style="display: none" name ="cs_add">
+                                        {% if cs.6 ==  request.session.userTel  %}
+                                            <input type="text" value="{{ cs.0 }}" style="display: none" name ="num">
+                                            <button type="submit" name="del">取消关注{{ cs.0 }}号充电桩</button>
+                                        {% else %}
+                                            <input type="text" value="{{ cs.0 }}" style="display: none"  name ="num">
+                                            <button type="submit" name="update">关注{{ cs.0 }}号充电桩</button>
+                                        {% endif %}
+                                    </form>
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+
+            <nav class="page" aria-label="Page navigation">
+                <ul class="pagination">
+                    <li>
+                        <a href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li><a href="#">1</a></li>
+                    <li><a href="#">2</a></li>
+                    <li><a href="#">3</a></li>
+                    <li><a href="#">4</a></li>
+                    <li><a href="#">5</a></li>
+                    <li>
+                        <a href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+
+        <div class="col-md-1"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+function abc(){
+       let myDate = new Date();
+       let len =  document.getElementsByClassName("time").length;
+
+       for(let i = 0 ; i<len ; i++){
+           let hours = myDate.getHours().valueOf() - {{ csAddState.cs_add }};
+           if(hours< 0 )
+               hours+=24;
+           let min =   myDate.getMinutes().valueOf()  - {{ csAddState.cs_add }};
+           if(min<0)
+               min+=60;
+        document.getElementsByClassName("time")[i].innerHTML = Math.round(hours) + "时" + Math.round(min) + "分"+ myDate.getSeconds() + "秒" ;
+        }
+}
+
+
+
+</script>
+
+</body>
+</html>

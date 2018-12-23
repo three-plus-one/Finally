@@ -1,0 +1,145 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <style>
+    html,body {
+     margin: 0;
+     height: 100%;
+    }
+    body {
+     display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    background : url({% static "img/timg1.jpg" %});
+    background-size: 100% 100%;
+}
+
+.form-signin {
+  width: 100%;
+  max-width: 330px;
+  padding: 15px;
+  margin: auto;
+}
+.form-signin .checkbox {
+  font-weight: 400;
+}
+.form-signin .form-control {
+  position: relative;
+  box-sizing: border-box;
+  height: auto;
+  padding: 10px;
+  font-size: 16px;
+}
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+.form-signin input[type="Tel"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.register{
+  position: absolute;
+  right: 8%;
+  top: 3%;
+}
+#register1{
+  margin-left: 20px;
+}
+
+.logo{
+    margin-top: 8%;
+    margin-bottom: 5%;
+    width:90px;
+    height:90px;
+    border-radius:100px;
+
+}
+.myMark{
+ color: white ;
+  margin-top: 4%;
+}
+    </style>
+</head>
+<body >
+
+
+     <div class="register">
+         <a id="register1" href="{% url 'login:login' %}">登陆</a>
+         <a href="#">忘记密码</a>
+     </div>
+
+     <form class="form-signin text-center" action="{% url 'register:register_action' %}" name="addForm" method = 'post' onsubmit="return check_PWD();">
+         {% csrf_token %}
+         <img class="logo" src="{% static "img/head.jpg" %}">
+         <h1 class="h3 mb-3 font-weight-normal" >请注册</h1>
+         <label for="inputTel" class="sr-only">Telephone</label>
+         <input type="tel" id="inputTel" name="inputTel" class="form-control" placeholder="TEL" >
+         <label for="inputPassword" class="sr-only">Password</label>
+         <input type="password" name="inputPassword" id = "inputPassword" class="form-control" placeholder="Password" >
+         <input type="password" name="ag_inputPassword" id = "ag_inputPassword" class="form-control" placeholder="PasswordAgain" required>
+         <button class="btn btn-sm btn-primary btn-block" onclick="alert('已发送验证码:'+{{ Verification_code }});" id="login"  >发送验证码</button>
+         <p id="checkP">&nbsp;</p>
+          <input type="text" class="form-control">
+         <div class="checkbox mb-3">
+         </div>
+         <button class="btn btn-lg btn-primary btn-block" type="submit" id="login"  >注册</button>
+         <div class="myMark">充电桩</div>
+     </form>
+
+
+</body>
+<script>
+
+function check_PWD() {
+    let pwd = document.getElementById("inputPassword");
+    let ag_pwd = document.getElementById("ag_inputPassword");
+
+    if (addForm.inputTel.value === "")
+      {
+           document.getElementById("checkP").innerHTML="<font color='red'>请输入手机号</font>";
+            addForm.inputTel.focus();
+          return false;
+      }
+
+    if(addForm.inputPassword.value === addForm.ag_inputPassword.value) {
+        document.getElementById("checkP").innerHTML="<font color='green'>两次密码相同</font>";
+        return true;
+    }
+    else {
+         console.log(pwd);
+          console.log(ag_pwd);
+        document.getElementById("checkP").innerHTML="<font color='red'>两次密码不相同</font>";
+        return false;
+    }
+}
+
+
+
+
+</script>
+</html>

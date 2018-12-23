@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>快充呀</title>
+     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="{% static "css/login.css"%}">
+</head>
+<body >
+
+
+     <div class="register">
+         <a id="register1" href="{% url 'register:register' %}">注册</a>
+         <a href="{% url 'login:reset_action' %}">忘记密码</a>
+     </div>
+
+     <form class="form-signin text-center" action="{% url 'login:login_action' %}"  method = 'post'>
+          {% csrf_token %}
+          {{uf.as_p}}
+         <img class="logo" src="{% static "/img/logo.png"%}">
+         <h1 class="h3 mb-3 font-weight-normal">欢迎登陆</h1>
+         <label for="inputTel" class="sr-only">Telephone</label>
+         <input type="tel" id="inputTel" name="inputTel" class="form-control" placeholder="Telephone" >
+         <label for="inputPassword" class="sr-only">Password</label>
+         <input type="password" name="inputPassword" id = "inputPassword" class="form-control" placeholder="Password" required>
+         <div class="checkbox mb-3">
+             <label>
+                 <input type="checkbox" value="remember-me"> 记住密码
+             </label>
+         </div>
+         <button class="btn btn-lg btn-primary btn-block" type="submit" id="login"  >登录</button>
+
+         <div class="myMark">充电桩</div>
+     </form>
+
+
+</body>
+</html>
